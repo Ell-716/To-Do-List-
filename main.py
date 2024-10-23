@@ -35,3 +35,13 @@ def add_tasks():
         except ValueError:
             print("An error occurred. Please try again!")
 
+
+def view_tasks():
+
+    if not tasks:
+        print("There are no tasks available.")
+    else:
+        print("TO-DO List")
+        print("-" * 11)
+        for index, task in enumerate(tasks, 1):
+            print(f"{index}. {task}")
