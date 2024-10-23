@@ -13,7 +13,19 @@ tasks = []
 
 
 def add_tasks():
+    """
+    Adds a new task to the task list.
 
+    The function prompts the user to input tasks, checks if the input is valid (non-empty),
+    and appends the task to the global 'tasks' list. It will continue to prompt the user
+    to add another task until they choose 'n' for no.
+    Args:
+        None
+    Returns:
+        None
+    Raises:
+        ValueError: If an error occurs during input handling.
+    """
     while True:
         try:
             new_task = input("Please add a task: ").strip()
@@ -37,7 +49,18 @@ def add_tasks():
 
 
 def view_tasks():
+    """
+    Displays all tasks currently in the task list.
 
+    If no tasks are present, it informs the user that there are no tasks available.
+    Otherwise, it enumerates and prints the list of tasks.
+    Args:
+        None
+    Returns:
+        None
+    Raises:
+        None
+    """
     if not tasks:
         print("There are no tasks available.")
     else:
@@ -48,6 +71,18 @@ def view_tasks():
 
 
 def mark_task_complete():
+    """
+    Marks a specified task as complete by adding a checkmark (✅) next to it.
+
+    The user is prompted to input the task number they wish to mark as complete.
+    The function validates the task number and updates the task with the checkmark.
+    Args:
+        None
+    Returns:
+        None
+    Raises:
+        ValueError: If the user input cannot be converted to an integer.
+    """
     view_tasks()
 
     try:
@@ -63,6 +98,19 @@ def mark_task_complete():
 
 
 def delete_task():
+    """
+    Deletes a specified task from the task list.
+
+    The user is prompted to input the task number they wish to delete.
+    The function validates the task number and removes the corresponding task from the list.
+    Args:
+        None
+    Returns:
+        None
+    Raises:
+        ValueError: If the user input cannot be converted to an integer or
+        other errors occur during input handling.
+    """
     view_tasks()
 
     while True:
@@ -86,7 +134,18 @@ def delete_task():
 
 
 def main():
+    """
+    Main function that runs the To-Do List program.
 
+    It displays a menu of options to the user and processes their choice accordingly.
+    The user can add tasks, view tasks, mark tasks as complete, delete tasks, or exit the program.
+    Args:
+        None
+    Returns:
+        None
+    Raises:
+        ValueError: If the user input cannot be converted to an integer when selecting a menu option.
+    """
     while True:
         try:
             print(MENU)
