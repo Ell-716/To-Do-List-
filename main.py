@@ -60,3 +60,26 @@ def mark_task_complete():
             print("Invalid task number! Please try again.")
     except ValueError:
         print("Please enter a valid number.")
+
+
+def delete_task():
+    view_tasks()
+
+    while True:
+        try:
+            task_to_delete = input("\nWhich task do you want to delete? ").strip()
+
+            if not task_to_delete.isdigit():
+                print(f"Invalid input. Enter a valid number from 1 to {len(tasks)}.")
+                continue
+
+            task_index = int(task_to_delete) - 1
+
+            if 0 <= task_index < len(tasks):
+                deleted_task = tasks.pop(task_index)
+                print(f"'{deleted_task}' successfully deleted.")
+                break
+            else:
+                print(f"Invalid number. Please enter a number from 1 to {len(tasks)}.")
+        except ValueError:
+            print("An error occurred. Please try again.")
