@@ -9,16 +9,15 @@ MENU = """
 --------------------
 """
 
-tasks = []
+tasks = []  # A list of dictionaries to store tasks and their priorities
 
 
 def add_tasks():
     """
-    Adds a new task to the task list.
+    Adds a new task with a priority level to the tasks list.
 
-    The function prompts the user to input tasks, checks if the input is valid (non-empty),
-    and appends the task to the global 'tasks' list. It will continue to prompt the user
-    to add another task until they choose 'n' for no.
+    The function prompts the user to input tasks and their priority level.
+    Tasks are stored in the global 'tasks' list as dictionaries containing the task description and priority.
     Args:
         None
     Returns:
@@ -28,22 +27,31 @@ def add_tasks():
     """
     while True:
         try:
+            # Get task description
             new_task = input("Please add a task: ").strip()
             if not new_task:
                 print("Invalid input. Task cannot be empty. Try again!")
                 continue
 
-            tasks.append(new_task)
-            print(f"{new_task} successfully added.")
-
+            # Get priority level and validate
             while True:
-                another_task = input("Would you like to add another task? y/n: ").strip().lower()
-                if another_task == "y":
+                priority = input("Please specify the priority level: High, Medium, or Low: ").strip().capitalize()
+                if priority in {"High", "Medium", "Low"}:
                     break
-                elif another_task == "n":
-                    return
                 else:
-                    print("Invalid choice. Try again!")
+                    print("Invalid priority level. Please enter High, Medium, or Low.")
+
+            # Add task to the global list
+            tasks.append({"task": new_task, "priority": priority})
+            print(f"Task '{new_task}' with priority '{priority}' successfully added.")
+
+            # Ask if the user wants to add another task
+            another_task = input("Would you like to add another task? y/n: ").strip().lower()
+            if another_task == "n":
+                return
+            elif another_task != "y":
+                print("Invalid choice. Returning to the menu.")
+                return
         except ValueError:
             print("An error occurred. Please try again!")
 
@@ -53,7 +61,8 @@ def view_tasks():
     Displays all tasks currently in the task list.
 
     If no tasks are present, it informs the user that there are no tasks available.
-    Otherwise, it enumerates and prints the list of tasks.
+    Otherwise, it enumerates and prints the list of tasks, with the checkmark (✅)
+    displayed after the priority for completed tasks.
     Args:
         None
     Returns:
@@ -67,7 +76,14 @@ def view_tasks():
         print("TO-DO List")
         print("-" * 11)
         for index, task in enumerate(tasks, 1):
-            print(f"{index}. {task}")
+            task_display = task["task"]
+            priority_display = f"({task['priority']})"
+
+            # Append ✅ after the priority if the task is complete
+            if "✅" in task_display:
+                print(f"{index}. {task_display.replace(' ✅', '')} {priority_display} ✅")
+            else:
+                print(f"{index}. {task_display} {priority_display}")
 
 
 def mark_task_complete():
@@ -75,7 +91,7 @@ def mark_task_complete():
     Marks a specified task as complete by adding a checkmark (✅) next to it.
 
     The user is prompted to input the task number they wish to mark as complete.
-    The function validates the task number and updates the task with the checkmark.
+    The function validates the task number and updates the corresponding task.
     Args:
         None
     Returns:
@@ -83,14 +99,24 @@ def mark_task_complete():
     Raises:
         ValueError: If the user input cannot be converted to an integer.
     """
-    view_tasks()
+    view_tasks()  # Display tasks
+
+    if not tasks:
+        print("No tasks to mark as complete.")
+        return
 
     try:
+        # Prompt the user to select a task
         task_to_complete = int(input("\nWhich task do you want to complete? ")) - 1
 
         if 0 <= task_to_complete < len(tasks):
-            tasks[task_to_complete] = f"{tasks[task_to_complete]} ✅"
-            print(f"Task {task_to_complete + 1} marked as complete!")
+            # Check if the task is already marked as complete
+            if "✅" in tasks[task_to_complete]["task"]:
+                print(f"Task {task_to_complete + 1} is already marked as complete.")
+            else:
+                # Mark the task as complete
+                tasks[task_to_complete]["task"] += " ✅"
+                print(f"Task {task_to_complete + 1} marked as complete!")
         else:
             print("Invalid task number! Please try again.")
     except ValueError:
@@ -109,9 +135,13 @@ def delete_task():
         None
     Raises:
         ValueError: If the user input cannot be converted to an integer or
-        other errors occur during input handling.
+        if other errors occur during input handling.
     """
-    view_tasks()
+    if not tasks:
+        print("There are no tasks to delete.")
+        return
+
+    view_tasks()  # Display the current tasks
 
     while True:
         try:
@@ -125,7 +155,7 @@ def delete_task():
 
             if 0 <= task_index < len(tasks):
                 deleted_task = tasks.pop(task_index)
-                print(f"'{deleted_task}' successfully deleted.")
+                print(f"Task '{deleted_task['task']}' successfully deleted.")
                 break
             else:
                 print(f"Invalid number. Please enter a number from 1 to {len(tasks)}.")
